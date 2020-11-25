@@ -77,6 +77,28 @@ typedef struct {
 
 #define TRANSLITERATION_DEFAULT_STATE (transliteration_state_t){NULL_PREFIX_RESULT, TRANS_STATE_BEGIN, 0, 0, 0, 1, 1, 0, 0, 0, 0}
 
+bool isValidUTF8(const std::string &string) {
+  int c, i, ix, n, j;
+  for (i = 0, ix = string.length(); i < ix; i++) {
+    c = (unsigned char)string[i];
+    if (0x00 <= c && c <= 0x7f)
+      n = 0;
+    else if ((c & 0xE0) == 0xC0)
+      n = 1;
+    else if (c == 0xed && i < (ix - 1) && ((unsigned char)string[i + 1] & 0xa0) == 0xa0)
+      return false;
+    else if ((c & 0xF0) == 0xE0)
+      n = 2;
+    else if ((c & 0xF8) == 0xF0)
+      n = 3;
+    else
+      return false;
+    for (j = 0; j < n && i < ix; j++) {
+      if ((++i == ix) || (((unsigned char)string[i] & 0xC0) != 0x80)) return false;
+    }
+  }
+  return true;
+}
 
 static transliteration_replacement_t *get_replacement(trie_t *trie, trie_prefix_result_t result) {
     uint32_t node_id = result.node_id;
@@ -668,6 +690,8 @@ static char *replace_groups(trie_t *trie, char *str, char *replacement, group_ca
 
 char *transliterate(char *trans_name, char *str, size_t len) {
     if (trans_name == NULL || str == NULL) return NULL;
+
+    if (!isValidUTF8(str)) return NULL;
 
     transliteration_table_t *trans_table = get_transliteration_table();
 
