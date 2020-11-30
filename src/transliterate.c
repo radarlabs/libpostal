@@ -77,6 +77,7 @@ typedef struct {
 
 #define TRANSLITERATION_DEFAULT_STATE (transliteration_state_t){NULL_PREFIX_RESULT, TRANS_STATE_BEGIN, 0, 0, 0, 1, 1, 0, 0, 0, 0}
 
+
 static transliteration_replacement_t *get_replacement(trie_t *trie, trie_prefix_result_t result) {
     uint32_t node_id = result.node_id;
     if (node_id == NULL_NODE_ID) return NULL;
