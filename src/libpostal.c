@@ -48,13 +48,19 @@ libpostal_normalize_options_t libpostal_get_default_options(void) {
 }
 
 char **libpostal_expand_address(char *input, libpostal_normalize_options_t options, size_t *n) {
-    cstring_array *strings = expand_address(input, options, n);
+    bool is_str_valid = is_valid_utf8(input);
+    char **empty_expansions = NULL;
+
+    cstring_array *strings = is_str_valid ? expand_address(input, options, n): empty_expansions;
     if (strings == NULL) return NULL;
     return cstring_array_to_strings(strings);
 }
 
 char **libpostal_expand_address_root(char *input, libpostal_normalize_options_t options, size_t *n) {
-    cstring_array *strings = expand_address_root(input, options, n);
+    bool is_str_valid = is_valid_utf8(input);
+    char **empty_expansions = NULL;
+
+    cstring_array *strings = is_str_valid ? expand_address_root(input, options, n): empty_expansions;
     if (strings == NULL) return NULL;
     return cstring_array_to_strings(strings);
 }

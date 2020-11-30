@@ -216,6 +216,8 @@ cstring_array *cstring_array_from_strings(char **strings, size_t n);
 
 bool cstring_array_extend(cstring_array *array, cstring_array *other);
 
+bool is_valid_utf8(cstring_array *str);
+
 // Convert cstring_array to an array of n C strings and destroy the cstring_array
 char **cstring_array_to_strings(cstring_array *self);
 
