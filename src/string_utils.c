@@ -169,6 +169,30 @@ uint32_t string_translate(char *str, size_t len, char *word_chars, char *word_re
     return num_replacements;
 }
 
+// from artemyarulin: https://github.com/openvenues/libpostal/issues/460
+bool is_valid_utf8(const char *str) {
+  int c, i, ix, n, j;
+  for (i = 0, ix = strlen(str); i < ix; i++) {
+    c = (unsigned char)str[i];
+    if (0x00 <= c && c <= 0x7f)
+      n = 0;
+    else if ((c & 0xE0) == 0xC0)
+      n = 1;
+    else if (c == 0xed && i < (ix - 1) && ((unsigned char)str[i + 1] & 0xa0) == 0xa0)
+      return false;
+    else if ((c & 0xF0) == 0xE0)
+      n = 2;
+    else if ((c & 0xF8) == 0xF0)
+      n = 3;
+    else
+      return false;
+    for (j = 0; j < n && i < ix; j++) {
+      if ((++i == ix) || (((unsigned char)str[i] & 0xC0) != 0x80)) return false;
+    }
+  }
+  return true;
+}
+
 ssize_t utf8proc_iterate_reversed(const uint8_t *str, ssize_t start, int32_t *dst) {
     ssize_t len = 0;
 

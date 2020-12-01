@@ -67,6 +67,7 @@ bool string_equals(const char *s1, const char *s2);
 uint32_t string_translate(char *str, size_t len, char *word_chars, char *word_repls, size_t trans_len);
 
 // UTF-8 string methods
+bool is_valid_utf8(const char *str);
 char *utf8_reversed_string(const char *s); // returns a copy, caller frees
 ssize_t utf8proc_iterate_reversed(const uint8_t *str, ssize_t start, int32_t *dst);
 
