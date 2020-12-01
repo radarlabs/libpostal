@@ -169,6 +169,7 @@ uint32_t string_translate(char *str, size_t len, char *word_chars, char *word_re
     return num_replacements;
 }
 
+// from artemyarulin: https://github.com/openvenues/libpostal/issues/460
 bool is_valid_utf8(const char *str) {
   int c, i, ix, n, j;
   for (i = 0, ix = strlen(str); i < ix; i++) {
